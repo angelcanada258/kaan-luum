@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0f6e56">
+    <title>Laguna de Kaan Luum | Control de acceso</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar" aria-label="Navegación principal">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true"><span></span></div>
+          <div>
+            <strong>Kaan Luum</strong>
+            <small>Control de acceso</small>
+          </div>
+        </div>
+
+        <nav class="nav-list">
+          <button class="nav-item active" data-page="dashboard">
+            <span class="nav-code">PN</span><span>Panel</span>
+          </button>
+          <button class="nav-item" data-page="entrada">
+            <span class="nav-code">EN</span><span>Entrada</span>
+          </button>
+          <button class="nav-item" data-page="salida">
+            <span class="nav-code">SA</span><span>Salida</span>
+          </button>
+          <button class="nav-item" data-page="historial">
+            <span class="nav-code">HI</span><span>Historial</span>
+          </button>
+          <button class="nav-item" data-page="reportes">
+            <span class="nav-code">RE</span><span>Reportes</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-foot">
+          <span class="status-dot" id="status-dot"></span>
+          <span id="connection-label">Conectando</span>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Laguna de Kaan Luum</p>
+            <h1 id="page-title">Panel de control</h1>
+          </div>
+          <div class="today-block">
+            <span>Operación del día</span>
+            <strong id="today-label"></strong>
+          </div>
+        </header>
+
+        <section class="page active" id="page-dashboard" aria-labelledby="page-title">
+          <div class="hero-grid">
+            <article class="occupancy-card">
+              <div class="occupancy-rings" aria-hidden="true"></div>
+              <p class="eyebrow light">Ocupación en tiempo real</p>
+              <div class="occupancy-number">
+                <strong id="dash-inside">0</strong><span>/ 50</span>
+              </div>
+              <div class="capacity-copy">
+                <span id="dash-capacity-label">Aforo tranquilo</span>
+                <span id="dash-percentage">0%</span>
+              </div>
+              <div class="capacity-track">
+                <span id="dash-capacity-bar"></span>
+              </div>
+            </article>
+
+            <div class="metric-grid">
+              <article class="metric-card">
+                <span class="metric-icon entrance">E</span>
+                <div><small>Entradas hoy</small><strong id="dash-entries">0</strong></div>
+              </article>
+              <article class="metric-card">
+                <span class="metric-icon exit">S</span>
+                <div><small>Salidas hoy</small><strong id="dash-exits">0</strong></div>
+              </article>
+              <article class="metric-card">
+                <span class="metric-icon capacity">A</span>
+                <div><small>Aforo máximo</small><strong id="dash-max">50</strong></div>
+              </article>
+              <article class="metric-card">
+                <span class="metric-icon revenue">$</span>
+                <div><small>Cobrado hoy</small><strong id="dash-revenue">$0</strong></div>
+              </article>
+            </div>
+          </div>
+
+          <div class="content-grid">
+            <article class="card">
+              <div class="card-heading">
+                <div><p class="eyebrow">Actividad</p><h2>Últimos registros</h2></div>
+                <button class="text-button" data-go="historial">Ver historial</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Folio</th><th>Brazalete</th><th>Evento</th><th>Hora</th></tr></thead>
+                  <tbody id="dash-recent"></tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="card type-card">
+              <div class="card-heading">
+                <div><p class="eyebrow">Brazaletes</p><h2>Distribución de hoy</h2></div>
+              </div>
+              <div class="type-list">
+                <div class="type-row adult"><span>Adulto</span><strong id="type-adult">0</strong></div>
+                <div class="type-row child"><span>Niño</span><strong id="type-child">0</strong></div>
+                <div class="type-row local"><span>Local</span><strong id="type-local">0</strong></div>
+              </div>
+              <p class="card-note">Conteo basado en las entradas registradas durante el día.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" id="page-entrada">
+          <div class="section-intro">
+            <div><p class="eyebrow">Nuevo visitante</p><h2>Escanea y entrega el brazalete</h2></div>
+            <span class="shortcut-hint">El lector envía Enter automáticamente</span>
+          </div>
+
+          <div class="entry-layout">
+            <form class="card entry-form" id="entry-form">
+              <div class="scanner-field">
+                <label for="entry-folio">Folio del brazalete</label>
+                <div class="scan-input">
+                  <span class="scan-corners" aria-hidden="true"></span>
+                  <input id="entry-folio" name="folio" type="text" maxlength="40"
+                    placeholder="Escanea o escribe, ej. KL-00123" autocomplete="off" autofocus>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="entry-type">Tipo operativo</label>
+                <select id="entry-type" name="tipo">
+                  <option value="adulto">Adulto</option>
+                  <option value="niño">Niño</option>
+                  <option value="local">Local</option>
+                </select>
+              </div>
+
+              <fieldset class="tariff-fieldset">
+                <legend>Selecciona la tarifa del brazalete</legend>
+                <div class="wristband-grid" id="tariff-grid"></div>
+              </fieldset>
+
+              <fieldset class="service-fieldset">
+                <legend>Servicios adicionales</legend>
+                <div class="service-grid" id="service-grid"></div>
+              </fieldset>
+
+              <div class="form-alert" id="entry-alert" role="status" aria-live="polite"></div>
+              <button class="primary-button large" type="submit">
+                Registrar entrada <span id="entry-button-total">$250</span>
+              </button>
+            </form>
+
+            <aside class="ticket-card">
+              <p class="ticket-kicker">Resumen de cobro</p>
+              <div class="ticket-brand">Kaan Luum</div>
+              <div class="ticket-line"><span>Acceso</span><strong id="ticket-access">$250</strong></div>
+              <div id="ticket-services"></div>
+              <div class="ticket-total"><span>Total</span><strong id="ticket-total">$250</strong></div>
+              <p class="ticket-note">El servicio se registra con el folio y no suma personas al aforo.</p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="page" id="page-salida">
+          <div class="section-intro">
+            <div><p class="eyebrow">Fin de visita</p><h2>Registra una salida</h2></div>
+            <span class="inside-pill"><strong id="exit-inside-count">0</strong> adentro</span>
+          </div>
+
+          <form class="card exit-form" id="exit-form">
+            <div class="scanner-field">
+              <label for="exit-folio">Folio del brazalete</label>
+              <div class="scan-input compact">
+                <span class="scan-corners" aria-hidden="true"></span>
+                <input id="exit-folio" name="folio" type="text" maxlength="40"
+                  placeholder="Escanea el brazalete de salida" autocomplete="off">
+              </div>
+            </div>
+            <button class="primary-button" type="submit">Registrar salida</button>
+          </form>
+          <div class="form-alert floating" id="exit-alert" role="status" aria-live="polite"></div>
+
+          <article class="card">
+            <div class="card-heading">
+              <div><p class="eyebrow">En el cenote</p><h2>Visitantes adentro ahora</h2></div>
+              <button class="text-button" id="refresh-inside">Actualizar</button>
+            </div>
+            <div class="inside-list" id="inside-list"></div>
+          </article>
+        </section>
+
+        <section class="page" id="page-historial">
+          <div class="section-intro">
+            <div><p class="eyebrow">Trazabilidad</p><h2>Historial de movimientos</h2></div>
+            <input class="date-control" id="history-date" type="date">
+          </div>
+          <article class="card">
+            <div class="tabs" role="tablist">
+              <button class="tab active" data-event="todos">Todos</button>
+              <button class="tab" data-event="entrada">Entradas</button>
+              <button class="tab" data-event="salida">Salidas</button>
+            </div>
+            <div class="filters">
+              <label class="search-control">
+                <span>Buscar</span>
+                <input id="history-folio" type="search" placeholder="Folio...">
+              </label>
+              <label>
+                <span>Tipo</span>
+                <select id="history-type">
+                  <option value="todos">Todos</option>
+                  <option value="adulto">Adulto</option>
+                  <option value="niño">Niño</option>
+                  <option value="local">Local</option>
+                </select>
+              </label>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Folio</th><th>Tipo</th><th>Evento</th><th>Hora</th><th>Duración</th></tr></thead>
+                <tbody id="history-body"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section class="page" id="page-reportes">
+          <div class="section-intro">
+            <div><p class="eyebrow">Lectura del día</p><h2>Reportes de operación</h2></div>
+            <div class="report-actions">
+              <input class="date-control" id="report-date" type="date">
+              <a class="secondary-button" id="download-csv" href="/api/exportar">Descargar CSV</a>
+            </div>
+          </div>
+
+          <div class="report-metrics">
+            <article><small>Entradas</small><strong id="report-entries">0</strong></article>
+            <article><small>Salidas</small><strong id="report-exits">0</strong></article>
+            <article><small>Adentro</small><strong id="report-inside">0</strong></article>
+            <article><small>Uso de aforo</small><strong id="report-capacity">0%</strong></article>
+          </div>
+
+          <div class="report-grid">
+            <article class="card">
+              <div class="card-heading">
+                <div><p class="eyebrow">Flujo</p><h2>Entradas por hora</h2></div>
+              </div>
+              <div class="bar-chart" id="hour-chart"></div>
+            </article>
+            <article class="card">
+              <div class="card-heading">
+                <div><p class="eyebrow">Resumen</p><h2>Por tipo de brazalete</h2></div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Tipo</th><th>Entradas</th><th>Salidas</th><th>Adentro</th></tr></thead>
+                  <tbody id="report-types"></tbody>
+                </table>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="/app.js"></script>
+  </body>
+</html>
