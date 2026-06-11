@@ -1,6 +1,4 @@
-const { createApp } = require('./create-app');
-
-const app = createApp();
+const app = require('./index');
 const port = Number(process.env.PORT) || 3000;
 
 if (require.main === module) {

@@ -35,7 +35,7 @@ async function request(path, options = {}) {
 }
 
 test('server exports the Express handler expected by Vercel', () => {
-  const handler = require('../server');
+  const handler = require('../index');
 
   assert.equal(typeof handler, 'function');
   assert.equal(typeof handler.use, 'function');
