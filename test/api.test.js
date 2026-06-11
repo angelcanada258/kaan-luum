@@ -1,4 +1,6 @@
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 const { afterEach, beforeEach, test } = require('node:test');
 const { createDatabase } = require('../database');
 const { createApp } = require('../create-app');
@@ -39,6 +41,16 @@ test('server exports the Express handler expected by Vercel', () => {
 
   assert.equal(typeof handler, 'function');
   assert.equal(typeof handler.use, 'function');
+});
+
+test('Vercel routes every request to the explicit Express entrypoint', () => {
+  const config = JSON.parse(
+    fs.readFileSync(path.join(__dirname, '..', 'vercel.json'), 'utf8')
+  );
+
+  assert.equal(config.builds[0].src, 'index.js');
+  assert.equal(config.builds[0].use, '@vercel/node');
+  assert.deepEqual(config.routes[0], { src: '/(.*)', dest: '/index.js' });
 });
 
 test('database stores required fields and calculates who is inside', () => {
