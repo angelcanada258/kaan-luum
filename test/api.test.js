@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const { afterEach, beforeEach, test } = require('node:test');
 const { createDatabase } = require('../database');
-const { createApp } = require('../app');
+const { createApp } = require('../create-app');
 
 let repository;
 let server;
