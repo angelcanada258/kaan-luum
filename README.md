@@ -52,6 +52,20 @@ detenido, respalda ese archivo para conservar todos los registros. Los archivos
 `kaan_luum.db-wal` y `kaan_luum.db-shm` pueden aparecer mientras el servidor
 está encendido y son parte normal de SQLite.
 
+## Despliegue en Vercel
+
+En local se utiliza SQLite. En Vercel se requiere PostgreSQL persistente porque
+el sistema de archivos de las funciones no conserva una base SQLite.
+
+1. Abre el proyecto `kaan-luum` en Vercel.
+2. En **Storage** o **Marketplace**, instala **Neon Postgres**.
+3. Conecta el recurso a `kaan-luum` para Production y Preview.
+4. Confirma que Vercel haya creado la variable `DATABASE_URL`.
+5. Vuelve a desplegar la rama `main`.
+
+El esquema y los índices se crean automáticamente en la primera consulta. No
+copies `kaan_luum.db` al repositorio ni a Vercel.
+
 ## Pruebas
 
 ```powershell

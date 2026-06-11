@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const { afterEach, beforeEach, test } = require('node:test');
 const { createDatabase } = require('../database');
-const { createApp } = require('../server');
+const { createApp } = require('../app');
 
 let repository;
 let server;
@@ -33,6 +33,13 @@ async function request(path, options = {}) {
     : await response.text();
   return { response, body };
 }
+
+test('server exports the Express handler expected by Vercel', () => {
+  const handler = require('../server');
+
+  assert.equal(typeof handler, 'function');
+  assert.equal(typeof handler.use, 'function');
+});
 
 test('database stores required fields and calculates who is inside', () => {
   repository.insertarRegistro({
