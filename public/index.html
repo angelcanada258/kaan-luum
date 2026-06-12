@@ -2,9 +2,17 @@
 <html lang="es">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#0f6e56">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kaan Luum">
+    <meta name="application-name" content="Kaan Luum">
+    <meta name="format-detection" content="telephone=no">
     <title>Laguna de Kaan Luum | Control de acceso</title>
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
     <link rel="stylesheet" href="/style.css">
   </head>
   <body>
@@ -273,6 +281,16 @@
         </section>
       </main>
     </div>
+
+    <aside class="pwa-install-banner" id="pwa-install-banner" aria-labelledby="pwa-install-title" hidden>
+      <img src="/icons/icon-192.png" alt="" width="52" height="52">
+      <div class="pwa-install-copy">
+        <strong id="pwa-install-title">Instala Kaan Luum</strong>
+        <span id="pwa-install-message">Abre el sistema como una app desde tu pantalla de inicio.</span>
+      </div>
+      <button class="pwa-install-action" id="pwa-install-action" type="button">Instalar</button>
+      <button class="pwa-install-close" id="pwa-install-close" type="button" aria-label="Cerrar aviso">×</button>
+    </aside>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="/app.js"></script>

@@ -23,6 +23,20 @@ la computadora con `ipconfig` y abre `http://IP-DE-LA-COMPUTADORA:3000`.
 Puede ser necesario permitir Node.js en el Firewall de Windows para redes
 privadas.
 
+## Instalar en iPhone
+
+La versión publicada funciona como PWA. En el iPhone:
+
+1. Abre `https://kaan-luum.vercel.app` en Safari.
+2. Toca el botón **Compartir**.
+3. Selecciona **Agregar a pantalla de inicio**.
+4. Confirma con **Agregar**.
+
+La app aparecerá con su propio icono y se abrirá sin la barra del navegador.
+La interfaz básica queda disponible sin conexión, pero consultar la base de
+datos y registrar entradas o salidas requiere internet. Las operaciones no se
+guardan en una cola offline para evitar duplicados y errores de aforo.
+
 ## Uso con lector
 
 Un lector USB de códigos de barras funciona como teclado. En las pantallas

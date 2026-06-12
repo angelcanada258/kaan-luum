@@ -632,6 +632,54 @@ legend { margin-bottom: 10px; }
 .toast.show { opacity: 1; transform: translateY(0); }
 .toast.error { background: #8b302c; }
 
+.pwa-install-banner[hidden] { display: none; }
+.pwa-install-banner {
+  position: fixed;
+  z-index: 60;
+  right: 22px;
+  bottom: 22px;
+  width: min(440px, calc(100vw - 32px));
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 16px;
+  color: white;
+  background: rgba(8, 76, 61, .97);
+  box-shadow: 0 20px 55px rgba(0,0,0,.24);
+  backdrop-filter: blur(16px);
+}
+.pwa-install-banner img { border-radius: 12px; box-shadow: 0 5px 16px rgba(0,0,0,.2); }
+.pwa-install-copy { min-width: 0; display: grid; gap: 4px; }
+.pwa-install-copy strong { font: 700 14px/1.1 Georgia, serif; }
+.pwa-install-copy span { color: rgba(255,255,255,.78); font-size: 10px; line-height: 1.4; }
+.pwa-install-action {
+  padding: 9px 11px;
+  border: 0;
+  border-radius: 9px;
+  color: var(--green-deep);
+  background: white;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 800;
+}
+.pwa-install-close {
+  align-self: start;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  color: rgba(255,255,255,.72);
+  background: transparent;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+}
+
 @media (max-width: 980px) {
   .hero-grid, .content-grid, .report-grid { grid-template-columns: 1fr; }
   .type-card { display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; }
@@ -643,7 +691,10 @@ legend { margin-bottom: 10px; }
 
 @media (max-width: 720px) {
   html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
-  body { padding-bottom: 72px; }
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: calc(72px + env(safe-area-inset-bottom));
+  }
   .sidebar {
     inset: auto 0 0;
     width: auto;
@@ -690,6 +741,19 @@ legend { margin-bottom: 10px; }
   .bar-chart { overflow-x: auto; justify-content: flex-start; }
   .bar-column { flex: 0 0 30px; }
   .toast { right: 16px; bottom: 82px; }
+  .pwa-install-banner {
+    right: 12px;
+    bottom: calc(78px + env(safe-area-inset-bottom));
+    width: calc(100vw - 24px);
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+  .pwa-install-action { grid-column: 2; justify-self: start; }
+  .pwa-install-close { grid-column: 3; grid-row: 1; }
+}
+
+@media (display-mode: standalone) {
+  .pwa-install-banner { display: none; }
 }
 
 @media (max-width: 410px) {

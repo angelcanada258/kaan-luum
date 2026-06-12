@@ -17,7 +17,8 @@ const state = {
   },
   tariff: 'mexicano',
   historyEvent: 'todos',
-  refreshTimer: null
+  refreshTimer: null,
+  installPrompt: null
 };
 
 const pageTitles = {
@@ -65,7 +66,10 @@ async function api(path, options = {}) {
     if (!response.ok) throw new Error(payload.error || 'No fue posible completar la operación.');
     return payload;
   } catch (error) {
-    if (error instanceof TypeError) setConnection(false);
+    if (error instanceof TypeError) {
+      setConnection(false);
+      throw new Error('Sin conexión. Conéctate a internet para consultar o registrar brazaletes.');
+    }
     throw error;
   }
 }
@@ -75,6 +79,107 @@ function setConnection(online) {
   const label = document.querySelector('#connection-label');
   dot.className = `status-dot ${online ? 'online' : 'offline'}`;
   label.textContent = online ? 'Base de datos conectada' : 'Servidor sin conexión';
+}
+
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true;
+}
+
+function isIosDevice() {
+  return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+}
+
+function installBannerDismissed() {
+  try {
+    return window.localStorage.getItem('kaan-luum-install-dismissed') === 'true';
+  } catch {
+    return false;
+  }
+}
+
+function hideInstallBanner(remember = false) {
+  document.querySelector('#pwa-install-banner').hidden = true;
+  if (remember) {
+    try {
+      window.localStorage.setItem('kaan-luum-install-dismissed', 'true');
+    } catch {
+      // Installation guidance can still be dismissed for the current page.
+    }
+  }
+}
+
+function showInstallBanner(mode) {
+  if (isStandalone() || installBannerDismissed()) return;
+
+  const banner = document.querySelector('#pwa-install-banner');
+  const message = document.querySelector('#pwa-install-message');
+  const action = document.querySelector('#pwa-install-action');
+
+  if (mode === 'ios') {
+    message.textContent = 'En Safari toca Compartir y luego “Agregar a pantalla de inicio”.';
+    action.textContent = 'Ver pasos';
+  } else {
+    message.textContent = 'Instala el sistema para abrirlo como una app.';
+    action.textContent = 'Instalar';
+  }
+  banner.hidden = false;
+}
+
+async function handleInstallAction() {
+  if (isIosDevice()) {
+    showToast('En Safari: Compartir → Agregar a pantalla de inicio.');
+    return;
+  }
+
+  if (!state.installPrompt) return;
+  state.installPrompt.prompt();
+  await state.installPrompt.userChoice;
+  state.installPrompt = null;
+  hideInstallBanner();
+}
+
+function setupPwaInstall() {
+  document.querySelector('#pwa-install-action').addEventListener('click', handleInstallAction);
+  document.querySelector('#pwa-install-close').addEventListener('click', () => {
+    hideInstallBanner(true);
+  });
+
+  if (isIosDevice()) showInstallBanner('ios');
+
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    state.installPrompt = event;
+    showInstallBanner('browser');
+  });
+  window.addEventListener('appinstalled', () => {
+    state.installPrompt = null;
+    hideInstallBanner();
+    showToast('Kaan Luum quedó instalada.');
+  });
+}
+
+function registerPwa() {
+  if (!('serviceWorker' in navigator)) return;
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {
+      // The web app continues to work normally if registration is unavailable.
+    });
+  });
+}
+
+function setupNetworkStatus() {
+  window.addEventListener('online', () => {
+    setConnection(true);
+    showToast('Conexión restablecida.');
+    if (state.page === 'dashboard') loadDashboard();
+    if (state.page === 'salida') loadInside();
+  });
+  window.addEventListener('offline', () => {
+    setConnection(false);
+    showToast('Sin conexión: las capturas están pausadas.', 'error');
+  });
+  if (!window.navigator.onLine) setConnection(false);
 }
 
 function showToast(message, type = 'success') {
@@ -411,6 +516,8 @@ async function initialize() {
   });
   document.querySelector('#history-date').value = today;
   document.querySelector('#report-date').value = today;
+  setupPwaInstall();
+  setupNetworkStatus();
 
   try {
     state.catalog = await api('/api/catalogo');
@@ -459,4 +566,5 @@ async function initialize() {
   }, 15000);
 }
 
+registerPwa();
 initialize();
